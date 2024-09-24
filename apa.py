@@ -13,7 +13,7 @@ from utils.queries import QUERY_USER, QUERY_LOGIN, MUTATION_GAME_PROCESS_TAPS_BA
 from utils.queries import QUERY_TASK_VERIF, QUERY_TASK_COMPLETED, QUERY_GET_TASK, QUERY_TASK_ID, QUERY_GAME_CONFIG
 
 url = "https://api-gw-tg.memefi.club/graphql"
-
+proxy_url = ""  # Replace with your proxy URL
 # HANDLE SEMUA ERROR TAROH DISINI BANG SAFE_POST
 async def safe_post(session, url, headers, json_payload):
     retries = 5
@@ -77,7 +77,7 @@ async def fetch(account_line):
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=data) as response:
+        async with session.post(url, headers=headers, json=data, proxy=proxy_url) as response:
             try:
                 json_response = await response.json()
                 if 'errors' in json_response:
@@ -105,7 +105,7 @@ async def cek_user(index):
     }
     
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=json_payload) as response:
+        async with session.post(url, headers=headers, json=json_payload, proxy=proxy_url) as response:
             if response.status == 200:
                 response_data = await response.json()
                 if 'errors' in response_data:
@@ -134,7 +134,7 @@ async def activate_energy_recharge_booster(index,headers):
     }
     
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=recharge_booster_payload) as response:
+        async with session.post(url, headers=headers, json=recharge_booster_payload, proxy=proxy_url) as response:
             if response.status == 200:
                 response_data = await response.json()
                 if response_data and 'data' in response_data and response_data['data'] and 'telegramGameActivateBooster' in response_data['data']:
@@ -161,7 +161,7 @@ async def activate_booster(index, headers):
         "query": QUERY_BOOSTER
     }
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=recharge_booster_payload) as response:
+        async with session.post(url, headers=headers, json=recharge_booster_payload, proxy=proxy_url) as response:
             if response.status == 200:
                 response_data = await response.json()
                 current_health = response_data['data']['telegramGameActivateBooster']['currentBoss']['currentHealth']
@@ -206,7 +206,7 @@ async def submit_taps(index, json_payload):
     headers['Authorization'] = f'Bearer {access_token}'
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=json_payload) as response:
+        async with session.post(url, headers=headers, json=json_payload, proxy=proxy_url) as response:
             if response.status == 200:
                 response_data = await response.json()
                 return response_data  # Pastikan mengembalikan data yang sudah diurai
@@ -226,7 +226,7 @@ async def set_next_boss(index, headers):
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=boss_payload) as response:
+        async with session.post(url, headers=headers, json=boss_payload, proxy=proxy_url) as response:
             if response.status == 200:
                 print("✅ Berhasil ganti bos.", flush=True)
             else:
@@ -248,7 +248,7 @@ async def cek_stat(index,headers):
     }
     
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=json_payload) as response:
+        async with session.post(url, headers=headers, json=json_payload, proxy=proxy_url) as response:
             if response.status == 200:
                 response_data = await response.json()
                 if 'errors' in response_data:
@@ -278,7 +278,7 @@ async def check_and_complete_tasks(index, headers):
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, json=task_list_payload, headers=headers) as response:
+        async with session.post(url, json=task_list_payload, headers=headers, proxy=proxy_url) as response:
             if response.status != 200:
                 # Menampilkan status dan respons jika bukan 200 OK
                 print(f"❌ Gagal dengan status {response.status}")
